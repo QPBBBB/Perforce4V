@@ -21,13 +21,42 @@ def p4_submit(worldspace: str, change_num: str, client: str = None):
         print("错误：未指定工作区 (--client)，且环境变量中没有 P4CLIENT。")
         sys.exit(1)
 
-    # 构造提交描述
+    # -----------------------------
+    # 🔄 1. 提交前先 revert 未修改文件
+    # -----------------------------
+    print(f"Reverting unchanged files in changelist {change_num} ...")
+
+    try:
+        revert_result = subprocess.run(
+            [P4, "revert", "-a", "-c", change_num],
+            capture_output=True,
+            text=True,
+            check=True,
+            env=os.environ
+        )
+        print("Revert unchanged files 输出：")
+        print(revert_result.stdout)
+    except subprocess.CalledProcessError as e:
+        print("Revert unchanged files 失败：")
+        print("stdout:", e.stdout)
+        print("stderr:", e.stderr)
+        # 不退出，让用户决定是否继续
+        # sys.exit(1)
+
+    # -----------------------------
+    # 2. 构造提交描述
+    # -----------------------------
     description = f"p4-bypass Worldspace:{worldspace} Change:{change_num}"
 
     # 获取 changelist spec
     try:
-        spec = subprocess.run([P4, "change", "-o", change_num],
-                              capture_output=True, text=True, check=True).stdout
+        spec = subprocess.run(
+            [P4, "change", "-o", change_num],
+            capture_output=True,
+            text=True,
+            check=True,
+            env=os.environ
+        ).stdout
     except subprocess.CalledProcessError as e:
         print("获取 changelist 失败：", e.stderr)
         sys.exit(1)
@@ -43,16 +72,29 @@ def p4_submit(worldspace: str, change_num: str, client: str = None):
 
     # 更新 changelist 描述
     try:
-        subprocess.run([P4, "change", "-i"], input=new_spec_text,
-                       capture_output=True, text=True, check=True)
+        subprocess.run(
+            [P4, "change", "-i"],
+            input=new_spec_text,
+            capture_output=True,
+            text=True,
+            check=True,
+            env=os.environ
+        )
     except subprocess.CalledProcessError as e:
         print("更新 changelist 描述失败：", e.stderr)
         sys.exit(1)
 
-    # 提交 changelist
+    # -----------------------------
+    # 3. 提交 changelist
+    # -----------------------------
     try:
-        result = subprocess.run([P4, "submit", "-c", change_num],
-                                capture_output=True, text=True, check=True)
+        result = subprocess.run(
+            [P4, "submit", "-c", change_num],
+            capture_output=True,
+            text=True,
+            check=True,
+            env=os.environ
+        )
         print("提交成功！输出如下：")
         print(result.stdout)
     except subprocess.CalledProcessError as e:
