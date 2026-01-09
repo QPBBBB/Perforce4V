@@ -115,6 +115,7 @@ if __name__ == "__main__":
         print("No args, continue...")
     paths_to_submit = [ r"unity_project\Assets\Res_Export\Environment",
                         r"unity_project\Assets\Res_Export\HLOD",
+                        r"unity_project\Assets\Res\Level\LevelLayout\Level_FB_Temple_01",
                         r"unity_project\AssetsExtra\raw\config\XRendererEffectData.bytes"]
 
     for p in paths_to_submit:
