@@ -23,7 +23,6 @@ VER001_WORKSPACE = r"worldx_robot_HZPCC0420018_1001"
 VER001_DEPOT = r"//world_x/ver_0.01"
 RELEASE_DEPOT = r"//world_x/release"
 
-
 # ---------------- Path Helpers ---------------- #
 
 def get_release_path(user_path: str):
@@ -108,39 +107,54 @@ def sync_ver001_to_release(target_path: str):
     return changelist_num
 
 
-# ---------------- Main Entry ---------------- #
+import argparse
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("No args, continue...")
-    paths_to_submit = [ r"unity_project\Assets\Res_Export\Environment",
-                        r"unity_project\Assets\Res_Export\HLOD",
-                        r"unity_project\Assets\Res\Level\LevelLayout\Level_FB_Temple_01",
-                        r"unity_project\Assets\Res\Level\LevelLayout\Level_FB_Roguelike_PVE",
-                        r"unity_project\Assets\Res_Export\DissolveLevel",
-                        r"unity_project\Assets\Res\Level\LevelLayout\Level_FB_PhotoStudio_Main",
-                        r"unity_project\AssetsExtra\Voxel\Level_FB_Roguelike_PVE_BuildForTeleport_Level0",
-                        r"unity_project\AssetsExtra\Voxel\Level_FB_Roguelike_PVE_BuildForTeleport_Level1",
-                        r"unity_project\AssetsExtra\Voxel\Level_FB_Roguelike_PVE_BuildForTeleport_Level2",
-                        r"unity_project\AssetsExtra\Voxel\Level_FB_Roguelike_PVE_BuildForTeleport_Level3",
-                        r"unity_project\AssetsExtra\Voxel\Level_FB_Roguelike_PVE_BuildForTeleport_Level11",
-                        r"unity_project\AssetsExtra\Voxel\Level_FB_Roguelike_PVE_BuildForTeleport_Level12",
-                        r"unity_project\AssetsExtra\Voxel\Level_FB_Roguelike_PVE_BuildForTeleport_Level13",
-                        r"unity_project\AssetsExtra\Voxel\Level_FB_Roguelike_PVE_BuildForTeleport_Level21",
-                        r"unity_project\AssetsExtra\Voxel\Level_FB_Roguelike_PVE_BuildForTeleport_Level22",
-                        r"unity_project\AssetsExtra\Voxel\Level_FB_Roguelike_PVE_BuildForTeleport_Level23",
-                        r"server\SpaceRes\Voxel\Level_FB_Roguelike_PVE_BuildForTeleport_Level0",
-                        r"server\SpaceRes\Voxel\Level_FB_Roguelike_PVE_BuildForTeleport_Level1",
-                        r"server\SpaceRes\Voxel\Level_FB_Roguelike_PVE_BuildForTeleport_Level2",
-                        r"server\SpaceRes\Voxel\Level_FB_Roguelike_PVE_BuildForTeleport_Level3",
-                        r"server\SpaceRes\Voxel\Level_FB_Roguelike_PVE_BuildForTeleport_Level11",
-                        r"server\SpaceRes\Voxel\Level_FB_Roguelike_PVE_BuildForTeleport_Level12",
-                        r"server\SpaceRes\Voxel\Level_FB_Roguelike_PVE_BuildForTeleport_Level13",
-                        r"server\SpaceRes\Voxel\Level_FB_Roguelike_PVE_BuildForTeleport_Level21",
-                        r"server\SpaceRes\Voxel\Level_FB_Roguelike_PVE_BuildForTeleport_Level22",
-                        r"server\SpaceRes\Voxel\Level_FB_Roguelike_PVE_BuildForTeleport_Level23",
-                        r"unity_project\AssetsExtra\raw\config\XRendererEffectData.bytes"]
+    parser = argparse.ArgumentParser(description="同步 ver_0.01 到 release")
+    parser.add_argument(
+        "--path",
+        help="要同步的单个相对路径（相对于工作区根目录）"
+    )
+    args = parser.parse_args()
 
-    for p in paths_to_submit:
-        print(get_release_path(p))
-        sync_ver001_to_release(p)
+    if args.path:
+        print(get_release_path(args.path))
+        sync_ver001_to_release(args.path)
+    else:
+        paths_to_submit = [
+            r"unity_project\Assets\Res_Export\Environment",
+            r"unity_project\Assets\Res_Export\DissolveLevel",
+            r"unity_project\Assets\Res_Export\HLOD",
+            r"unity_project\Assets\Res_Export\MaterialEffect",
+            r"unity_project\Assets\Res_Export\Texture",
+            r"unity_project\Assets\Res_Export\XRenderMeshData",
+            r"unity_project\Assets\Res\Level\LevelLayout\Level_FB_Temple_01",
+            r"unity_project\Assets\Res\Level\LevelLayout\Level_FB_Roguelike_PVE",
+            r"unity_project\Assets\Res\Level\LevelLayout\Level_FB_PhotoStudio_Main",
+            r"unity_project\AssetsExtra\Voxel\Level_FB_Roguelike_PVE_BuildForTeleport_Level0",
+            r"unity_project\AssetsExtra\Voxel\Level_FB_Roguelike_PVE_BuildForTeleport_Level1",
+            r"unity_project\AssetsExtra\Voxel\Level_FB_Roguelike_PVE_BuildForTeleport_Level2",
+            r"unity_project\AssetsExtra\Voxel\Level_FB_Roguelike_PVE_BuildForTeleport_Level3",
+            r"unity_project\AssetsExtra\Voxel\Level_FB_Roguelike_PVE_BuildForTeleport_Level11",
+            r"unity_project\AssetsExtra\Voxel\Level_FB_Roguelike_PVE_BuildForTeleport_Level12",
+            r"unity_project\AssetsExtra\Voxel\Level_FB_Roguelike_PVE_BuildForTeleport_Level13",
+            r"unity_project\AssetsExtra\Voxel\Level_FB_Roguelike_PVE_BuildForTeleport_Level21",
+            r"unity_project\AssetsExtra\Voxel\Level_FB_Roguelike_PVE_BuildForTeleport_Level22",
+            r"unity_project\AssetsExtra\Voxel\Level_FB_Roguelike_PVE_BuildForTeleport_Level23",
+            r"unity_project\AssetsExtra\raw\XGIProbe",
+            r"unity_project\AssetsExtra\raw\config",
+            r"server\SpaceRes\Voxel\Level_FB_Roguelike_PVE_BuildForTeleport_Level0",
+            r"server\SpaceRes\Voxel\Level_FB_Roguelike_PVE_BuildForTeleport_Level1",
+            r"server\SpaceRes\Voxel\Level_FB_Roguelike_PVE_BuildForTeleport_Level2",
+            r"server\SpaceRes\Voxel\Level_FB_Roguelike_PVE_BuildForTeleport_Level3",
+            r"server\SpaceRes\Voxel\Level_FB_Roguelike_PVE_BuildForTeleport_Level11",
+            r"server\SpaceRes\Voxel\Level_FB_Roguelike_PVE_BuildForTeleport_Level12",
+            r"server\SpaceRes\Voxel\Level_FB_Roguelike_PVE_BuildForTeleport_Level13",
+            r"server\SpaceRes\Voxel\Level_FB_Roguelike_PVE_BuildForTeleport_Level21",
+            r"server\SpaceRes\Voxel\Level_FB_Roguelike_PVE_BuildForTeleport_Level22",
+            r"server\SpaceRes\Voxel\Level_FB_Roguelike_PVE_BuildForTeleport_Level23"
+        ]
+
+        for p in paths_to_submit:
+            print(get_release_path(p))
+            sync_ver001_to_release(p)

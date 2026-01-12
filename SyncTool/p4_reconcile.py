@@ -36,6 +36,36 @@ def create_changelist(description: str):
 
     raise RuntimeError(f"创建 changelist 失败: {output}")
 
+def show_status(path: str):
+    """
+    打印指定路径下的 Perforce 本地变更状态（新增、修改、删除）
+    不返回任何变量
+    """
+    path = os.path.normpath(path)
+    if not path.endswith("..."):
+        path = os.path.join(path, "...")
+
+    try:
+        result = subprocess.run(
+            [P4, "status", path],
+            capture_output=True,
+            text=True,
+            check=True,
+            env=os.environ
+        )
+        output = result.stdout.strip()
+        if output:
+            print("检测到以下本地变更：")
+            print(output)
+        else:
+            print("没有检测到本地变更。")
+
+    except subprocess.CalledProcessError as e:
+        print("获取状态失败！")
+        print("stdout:", e.stdout)
+        print("stderr:", e.stderr)
+
+
 
 def p4_reconcile(path: str, client: str = None) -> str:
     # 设置环境变量
@@ -54,21 +84,21 @@ def p4_reconcile(path: str, client: str = None) -> str:
     # 自动补上 \...
     if not path.endswith("..."):
         path = os.path.join(path, "...")
-
-    # ---------------------------
-    # 🔄 1. Refresh：先 sync 一次
-    # ---------------------------
-    print("执行 refresh (p4 sync)...")
-    subprocess.run(
-        [P4, "sync", "-f", path],
-        text=True,
-        env=os.environ
-    )
+    show_status(path)
+    # # ---------------------------
+    # # 🔄 1. Refresh：先 sync 一次
+    # # ---------------------------
+    # print("执行 refresh (p4 sync)...")
+    # subprocess.run(
+    #     [P4, "sync", "-f", path],
+    #     text=True,
+    #     env=os.environ
+    # )
 
     # ---------------------------
     # 2. 创建 changelist
     # ---------------------------
-    description = f"p4-bypass xrobot ver_0.01 to release sync path : {path}"
+    description = f"p4-bypass p4-admin-bypass xrobot ver_0.01 to release sync path : {path}"
     change_num = create_changelist(description)
     print(f"新建 changelist: {change_num}")
 
@@ -102,6 +132,7 @@ def p4_reconcile(path: str, client: str = None) -> str:
         print("stdout:", e.stdout)
         print("stderr:", e.stderr)
 
+    show_status(path)
     return change_num
 
 
