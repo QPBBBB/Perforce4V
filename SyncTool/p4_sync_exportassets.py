@@ -6,7 +6,7 @@ from clear_asset import clear_asset
 from copy_asset import copy_asset
 from clear_folder import clear_folder
 from copy_folder import copy_folder
-from p4_reconcile import p4_reconcile, show_status, create_changelist
+from p4_reconcile import p4_reconcile, create_changelist
 from p4_submit import p4_submit
 from p4_update import p4_update
 
@@ -56,7 +56,7 @@ def p4_reconcile_multi(paths: list, workspace: str) -> str:
     changelist_num = create_changelist("p4-bypass p4-admin-bypass 001 to release", workspace)
     for path in paths:
         local_path = set_asset_directory(path)
-        print(f"🔍 Reconcile: {local_path}")
+        print(f"Reconcile: {local_path}")
         result = subprocess.run([
             P4, "-c", workspace, "reconcile", "-c", changelist_num, local_path
         ], capture_output=True, text=True, env=os.environ)
@@ -75,7 +75,7 @@ def is_unity_folder(path: str) -> bool:
 
 # ---------------- Merge Logic ---------------- #
 
-def sync_ver001_to_release(target_path: str,  submit: bool = True, one: bool = False, changelist_num: int = None) -> str:
+def sync_ver001_to_release(target_path: str,  submit: bool = True, one: bool = False, changelist_num: str = None) -> str:
     target_folder = target_path
     if not is_unity_folder(get_ver001_path(target_path)):
         target_folder = get_asset_directory(target_path)
@@ -112,7 +112,7 @@ def sync_ver001_to_release(target_path: str,  submit: bool = True, one: bool = F
         copy_folder(ver001_path, release_path)
 
     # Reconcile
-    changelist_num = p4_reconcile(release_path, RELEASE_WORKSPACE, bool, changelist_num)
+    changelist_num = p4_reconcile(release_path, RELEASE_WORKSPACE, one, changelist_num)
     if submit:
         p4_submit("release", changelist_num, RELEASE_WORKSPACE)
     else:
@@ -148,7 +148,8 @@ if __name__ == "__main__":
             for path in path_list:
                 print(get_release_path(path))
                 release_path = sync_ver001_to_release(path, submit=False, one=True, changelist_num=changelist_num)
-            p4_submit("release", changelist_num, RELEASE_WORKSPACE)
+            newchangelist_num = p4_reconcile_multi(path_list,RELEASE_WORKSPACE)
+            p4_submit("release", newchangelist_num, RELEASE_WORKSPACE)
     else:
 
         print("错误：shu输入")
