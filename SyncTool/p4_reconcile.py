@@ -5,29 +5,41 @@ import argparse
 
 P4 = r"C:\Program Files\Perforce\p4.exe"
 
-
-def create_changelist(description: str):
+def create_changelist(description: str, workspace: str):
     """
     创建一个新的 changelist，并返回 changelist 号
     """
-    template = subprocess.run(
-        [P4, "change", "-o"],
-        capture_output=True,
-        text=True,
-        check=True,
-        env=os.environ
-    ).stdout
+    try:
+        # 获取 changelist 模板
+        template = subprocess.run(
+            [P4, "-c", workspace, "change", "-o"],
+            capture_output=True,
+            text=True,
+            check=True,
+            env=os.environ
+        ).stdout
+    except subprocess.CalledProcessError as e:
+        print(f"获取 changelist 模板失败（workspace: {workspace}）")
+        print(e.stderr or e.stdout)
+        raise
 
+    # 替换描述
     new_spec = template.replace("<enter description here>", description)
 
-    result = subprocess.run(
-        [P4, "change", "-i"],
-        input=new_spec,
-        capture_output=True,
-        text=True,
-        check=True,
-        env=os.environ
-    )
+    try:
+        # 创建 changelist
+        result = subprocess.run(
+            [P4, "-c", workspace, "change", "-i"],
+            input=new_spec,
+            capture_output=True,
+            text=True,
+            check=True,
+            env=os.environ
+        )
+    except subprocess.CalledProcessError as e:
+        print("创建 changelist 失败")
+        print(e.stderr or e.stdout)
+        raise
 
     output = result.stdout.strip()
 
@@ -67,7 +79,7 @@ def show_status(path: str):
 
 
 
-def p4_reconcile(path: str, client: str = None) -> str:
+def p4_reconcile(path: str, client: str = None, one: bool = False, changelist_num: str = None) -> str:
     # 设置环境变量
     os.environ["P4PORT"] = "p4-world.funplus.com.cn:1666"
     os.environ["P4USER"] = "worldx_robot"
@@ -99,7 +111,10 @@ def p4_reconcile(path: str, client: str = None) -> str:
     # 2. 创建 changelist
     # ---------------------------
     description = f"p4-bypass p4-admin-bypass xrobot ver_0.01 to release sync path : {path}"
-    change_num = create_changelist(description)
+    if one:
+        change_num = changelist_num
+    else:
+        change_num = create_changelist(description,client)
     print(f"新建 changelist: {change_num}")
 
     # ---------------------------
