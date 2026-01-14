@@ -54,15 +54,71 @@ def set_asset_directory(asset_path: str) -> str:
 
 def p4_reconcile_multi(paths: list, workspace: str) -> str:
     changelist_num = create_changelist("p4-bypass p4-admin-bypass 001 to release", workspace)
+    print(f"创建 changelist: {changelist_num}")
+
+    added, edited, deleted, errors = [], [], [], []
+
     for path in paths:
         local_path = set_asset_directory(path)
-        print(f"Reconcile: {local_path}")
-        result = subprocess.run([
-            P4, "-c", workspace, "reconcile", "-c", changelist_num, local_path
-        ], capture_output=True, text=True, env=os.environ)
-        print(result.stdout)
-        print(result.stderr)
+        print(f"\n Reconcile: {local_path}")
+
+        try:
+            result = subprocess.run(
+                [P4, "-c", workspace, "reconcile", "-c", changelist_num, local_path],
+                capture_output=True,
+                text=True,
+                env=os.environ,
+                check=True
+            )
+            output = result.stdout.strip()
+            print(output)
+
+            for line in output.splitlines():
+                if " - add " in line:
+                    file_path = line.split(" - ")[0].strip()
+                    added.append(file_path)
+                elif " - edit " in line:
+                    file_path = line.split(" - ")[0].strip()
+                    edited.append(file_path)
+                elif " - delete " in line:
+                    file_path = line.split(" - ")[0].strip()
+                    deleted.append(file_path)
+
+        except subprocess.CalledProcessError as e:
+            print("Reconcile 失败：", e.stderr.strip())
+            errors.append((local_path, e.stderr.strip()))
+
+    # 自动补全操作
+    def run_p4_action(action, files):
+        for f in files:
+            try:
+                print(f"执行 p4 {action}: {f}")
+                subprocess.run(
+                    [P4, "-c", workspace, action, "-c", changelist_num, f],
+                    capture_output=True,
+                    text=True,
+                    env=os.environ,
+                    check=True
+                )
+            except subprocess.CalledProcessError as e:
+                print(f"p4 {action} 失败: {f}")
+                print(e.stderr.strip())
+
+    run_p4_action("add", added)
+    run_p4_action("edit", edited)
+    run_p4_action("delete", deleted)
+
+    print("\n 所有操作完成！")
+    print(f"新增: {len(added)}")
+    print(f"修改: {len(edited)}")
+    print(f"删除: {len(deleted)}")
+    if errors:
+        print(f"Reconcile 失败路径: {len(errors)}")
+        for path, err in errors:
+            print(f"  - {path}: {err}")
+
     return changelist_num
+
 
 
 
@@ -125,12 +181,117 @@ import argparse
 def is_valid_path(path: str) -> bool:
     return bool(path and path.strip())
 
+def move_all_files_to_new_changelist_and_submit(workspace: str, description: str = "Auto-merged changelists") -> str:
+    # Step 1: 创建新的 changelist
+    changelist_spec = f"""Change: new
+
+Description:
+\t{description}
+"""
+    result = subprocess.run(
+        ["p4", "-c", workspace, "change", "-i"],
+        input=changelist_spec,
+        text=True,
+        capture_output=True,
+        env=os.environ
+    )
+    if result.returncode != 0:
+        print("创建 changelist 失败：", result.stderr)
+        return None
+
+    # 提取 changelist 编号
+    for line in result.stdout.splitlines():
+        if line.startswith("Change") and "created" in line:
+            changelist_num = line.split()[1]
+            break
+    else:
+        print("无法解析 changelist 编号")
+        return None
+
+    print(f"创建 changelist: {changelist_num}")
+
+    # Step 2: 获取所有 opened 文件
+    result = subprocess.run(
+        ["p4", "-c", workspace, "opened"],
+        capture_output=True,
+        text=True,
+        env=os.environ
+    )
+    if result.returncode != 0:
+        print("获取 opened 文件失败：", result.stderr)
+        return None
+
+    file_paths = []
+    for line in result.stdout.splitlines():
+        if "default change" in line or "change" in line:
+            file_path = line.split("#")[0].strip()
+            file_paths.append(file_path)
+
+    if not file_paths:
+        print("⚠没有待提交的文件")
+        return None
+
+    # Step 3: 移动所有文件到新 changelist
+    for file_path in file_paths:
+        subprocess.run(
+            ["p4", "-c", workspace, "reopen", "-c", changelist_num, file_path],
+            capture_output=True,
+            text=True,
+            env=os.environ
+        )
+
+    print(f"已将 {len(file_paths)} 个文件移动到 changelist {changelist_num}")
+
+    # Step 4: 提交 changelist
+    result = subprocess.run(
+        ["p4", "-c", workspace, "submit", "-c", changelist_num],
+        capture_output=True,
+        text=True,
+        env=os.environ
+    )
+    if result.returncode != 0:
+        print("提交失败：", result.stderr)
+        return None
+
+    print(f"提交成功！Changelist {changelist_num} 已提交。")
+
+    # Step 5: 删除所有空的 pending changelist
+    result = subprocess.run(
+        ["p4", "-c", workspace, "changes", "-s", "pending"],
+        capture_output=True,
+        text=True,
+        env=os.environ
+    )
+    for line in result.stdout.splitlines():
+        parts = line.strip().split()
+        if len(parts) >= 2:
+            pending_cl = parts[1]
+            # 检查 changelist 是否为空
+            opened = subprocess.run(
+                ["p4", "-c", workspace, "opened", "-c", pending_cl],
+                capture_output=True,
+                text=True,
+                env=os.environ
+            )
+            if not opened.stdout.strip():
+                # changelist 是空的，可以删除
+                subprocess.run(
+                    ["p4", "-c", workspace, "change", "-d", pending_cl],
+                    capture_output=True,
+                    text=True,
+                    env=os.environ
+                )
+                print(f"已删除空 changelist: {pending_cl}")
+
+    return changelist_num
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="同步 ver_0.01 到 release")
     parser.add_argument("--paths", help="用英文逗号分隔的多个相对路径（相对于工作区根目录）")
     args = parser.parse_args()
 
     if args.paths and args.paths.strip():
+        args.paths = args.paths.replace("/", "\\")
         path_list = [p.strip() for p in args.paths.split(",") if p.strip()]
         if not path_list:
             print("未提供有效路径，已跳过同步。")
@@ -150,6 +311,8 @@ if __name__ == "__main__":
                 release_path = sync_ver001_to_release(path, submit=False, one=True, changelist_num=changelist_num)
             newchangelist_num = p4_reconcile_multi(path_list,RELEASE_WORKSPACE)
             p4_submit("release", newchangelist_num, RELEASE_WORKSPACE)
+            p4_submit("release", changelist_num, RELEASE_WORKSPACE)
+            # move_all_files_to_new_changelist_and_submit(RELEASE_WORKSPACE,"p4-bypass p4-admin-bypass 001 to release test")
     else:
 
         print("错误：shu输入")
