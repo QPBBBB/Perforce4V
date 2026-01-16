@@ -4,35 +4,30 @@ import sys
 
 def copy_asset(src_asset: str, dst_asset: str):
     """
-    复制单个资产文件，如果存在对应的 .meta 文件也一并复制
+    复制单个资产文件及其 .meta 文件，自动创建目录、处理只读文件、覆盖旧文件
     """
-    # 检查源文件是否存在
-    if not os.path.isfile(src_asset):
-        print(f"源资产文件不存在: {src_asset}")
-        return
-
-    # 创建目标目录（如果不存在）
-    dst_dir = os.path.dirname(dst_asset)
-    if not os.path.exists(dst_dir):
-        os.makedirs(dst_dir)
+    def safe_copy_file(src: str, dst: str):
+        try:
+            if not os.path.isfile(src):
+                print(f"源文件不存在: {src}")
+                return
+            os.makedirs(os.path.dirname(dst), exist_ok=True)
+            if os.path.exists(dst):
+                os.chmod(dst, 0o666)  # 解除只读
+                os.remove(dst)
+            shutil.copy2(src, dst)
+            print(f"已复制: {src} -> {dst}")
+        except Exception as e:
+            print(f"复制失败: {src} -> {dst}，错误: {e}")
 
     # 复制主文件
-    try:
-        shutil.copy2(src_asset, dst_asset)
-        print(f"已复制资产文件: {src_asset} -> {dst_asset}")
-    except Exception as e:
-        print(f"复制资产文件失败: {src_asset}, 错误: {e}")
+    safe_copy_file(src_asset, dst_asset)
 
-    # 复制 .meta 文件
+    # 复制 .meta 文件（如果存在）
     src_meta = src_asset + ".meta"
     dst_meta = dst_asset + ".meta"
-
     if os.path.isfile(src_meta):
-        try:
-            shutil.copy2(src_meta, dst_meta)
-            print(f"已复制 Meta 文件: {src_meta} -> {dst_meta}")
-        except Exception as e:
-            print(f"复制 Meta 文件失败: {src_meta}, 错误: {e}")
+        safe_copy_file(src_meta, dst_meta)
 
 
 if __name__ == "__main__":
