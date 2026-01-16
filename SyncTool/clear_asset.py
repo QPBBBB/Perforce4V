@@ -1,28 +1,27 @@
 import os
+import stat
 import sys
 
 def clear_asset(asset_file: str):
     """
-    删除指定资产文件，如果存在对应的 .meta 文件也一并删除
+    删除指定资产文件及其 .meta 文件，自动解除只读限制
     """
-    # 删除主文件
-    if os.path.isfile(asset_file):
-        try:
-            os.remove(asset_file)
-            print(f"已删除资产文件: {asset_file}")
-        except Exception as e:
-            print(f"删除资产文件失败: {asset_file}, 错误: {e}")
-    else:
-        print(f"资产文件不存在: {asset_file}")
+    def safe_delete(file_path: str):
+        if os.path.isfile(file_path):
+            try:
+                os.chmod(file_path, stat.S_IWRITE)  # 解除只读限制
+                os.remove(file_path)
+                print(f"已删除: {file_path}")
+            except PermissionError:
+                print(f"权限不足，无法删除: {file_path}（可能被占用或只读）")
+            except Exception as e:
+                print(f"删除失败: {file_path}，错误: {e}")
+        else:
+            print(f"文件不存在: {file_path}")
 
-    # 检查并删除 .meta 文件
-    meta_file = asset_file + ".meta"
-    if os.path.isfile(meta_file):
-        try:
-            os.remove(meta_file)
-            print(f"已删除资产 Meta 文件: {meta_file}")
-        except Exception as e:
-            print(f"删除 Meta 文件失败: {meta_file}, 错误: {e}")
+    safe_delete(asset_file)
+    safe_delete(asset_file + ".meta")
+
 
 
 if __name__ == "__main__":

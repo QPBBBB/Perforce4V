@@ -122,7 +122,7 @@ def submit_multiple_paths(path_string: str, p4user: str, p4workspace: str, log_f
     setattr(P4Tool, 'args', P4Tool.args)
     if rls:
         path_list = build_local_paths(path_string, root_prefix=RELEASE_ROOT)
-        P4Tool.p4_commitpathlist(path_list, commmitMsg="test 001 To release ")
+        P4Tool.p4_commitpathlist(path_list, commmitMsg="p4-bypass p4-admin-bypass 001 To release ")
         print(f"以提交：{path_list}")
 
 def submitreleasepaths(path_str: str):
