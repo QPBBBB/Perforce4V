@@ -2,7 +2,7 @@ import os
 import types
 import argparse
 import sys
-import Project.P4V.P4Tool as P4Tool
+from Project.P4V import P4Tool
 from Project.Utils.clear_folder import clear_folder
 from Project.Utils.clear_asset import clear_asset
 from Project.Utils.copy_folder import copy_folder
