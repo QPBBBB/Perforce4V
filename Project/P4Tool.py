@@ -5,10 +5,6 @@ import sys
 import json
 import datetime
 import platform
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-========
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
 # from LarkTools import LarkTools
 
 try:
@@ -16,21 +12,12 @@ try:
 except ModuleNotFoundError:
     # log_to_file("P4 module not found. Installing...")
     import subprocess
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-========
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
     subprocess.check_call(["pip", "install", "p4python"])
     from P4 import P4, P4Exception
 
 
 def is_mac():
     return platform.system() == "Darwin" and not is_ios()
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-
-========
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
 def is_ios():
     if sys.platform == "ios":
         return True
@@ -38,10 +25,6 @@ def is_ios():
         return False
     return False
 
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-========
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
 def getP4Client():
     p4 = P4()
     p4.user = args.p4user
@@ -52,10 +35,6 @@ def getP4Client():
     p4.port = "p4-world.funplus.com.cn:1666"
     return p4
 
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-========
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
 def get_p4Path(path: str):
     submitPath = ""
     if is_mac():
@@ -69,10 +48,6 @@ def get_p4Path(path: str):
             submitPath += "..."
     return submitPath
 
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-========
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
 def p4_update(path: str):
     if not path:
         log_to_file("Error:commit 路径为空")
@@ -95,10 +70,6 @@ def p4_update(path: str):
         errors = '\n'.join(e.errors)
         log_to_file("Error:", warnings, errors)
 
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-========
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
 def p4_updateF(path: str):
     if not path:
         log_to_file("Error:commit 路径为空")
@@ -119,10 +90,6 @@ def p4_updateF(path: str):
         errors = '\n'.join(e.errors)
         log_to_file("Error:", warnings, errors)
 
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-========
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
 def p4_update_f(path: str):
     if not path:
         log_to_file("Error:commit 路径为空")
@@ -148,23 +115,14 @@ def p4_update_f(path: str):
         errors = '\n'.join(e.errors)
         log_to_file("Error:", warnings, errors)
 
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-========
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
 def p4_UpdateFiles(paths: list):
     if not paths:
         log_to_file("Error:_Update 路径为空")
     p4 = getP4Client()
     try:
         with p4.connect():
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-            # p4Path = get_p4Path(paths)
-            # p4.run("revert", "-k", paths)
-========
             #p4Path = get_p4Path(paths)
             #p4.run("revert", "-k", paths)
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
             files = p4.run_sync(paths)
             log_to_file("returnStrStart ")
             for msg in p4.messages:
@@ -176,25 +134,15 @@ def p4_UpdateFiles(paths: list):
         errors = '\n'.join(e.errors)
         log_to_file("Error:", warnings, errors)
 
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-========
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
 def Get_ResolveFiles_Info(paths: list):
     if not paths:
         log_to_file("Error:Resolve 路径为空")
     p4 = getP4Client()
     try:
         with p4.connect():
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-            # p4Path = get_p4Path(paths)
-            # p4.run("revert", "-k", paths)
-            files = p4.run_resolve('-n', paths)
-========
             #p4Path = get_p4Path(paths)
             #p4.run("revert", "-k", paths)
             files = p4.run_resolve('-n',paths)
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
             json_str = json.dumps(files)
             log_to_file("returnStrStart ", json_str, " returnStrEnd")
     except P4Exception as e:
@@ -202,25 +150,15 @@ def Get_ResolveFiles_Info(paths: list):
         errors = '\n'.join(e.errors)
         log_to_file("Error:", warnings, errors)
 
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-========
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
 def p4_FstatFiles(paths: list):
     if not paths:
         log_to_file("Error:Fstat 路径为空")
     p4 = getP4Client()
     try:
         with p4.connect():
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-            # p4Path = get_p4Path(paths)
-            # p4.run("revert", "-k", paths)
-            files = p4.run_fstat(paths)
-========
             #p4Path = get_p4Path(paths)
             #p4.run("revert", "-k", paths)
             files =  p4.run_fstat(paths)
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
             json_str = json.dumps(files)
             log_to_file("returnStrStart ", json_str, " returnStrEnd")
     except P4Exception as e:
@@ -228,28 +166,16 @@ def p4_FstatFiles(paths: list):
         errors = '\n'.join(e.errors)
         log_to_file("Error:", warnings, errors)
 
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-def p4_LockFiles(paths: list):
-========
 def p4_LockFiles(paths: list): 
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
     if not paths:
         log_to_file("Error:Lock 路径为空")
     p4 = getP4Client()
     try:
         with p4.connect():
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-            # p4Path = get_p4Path(paths)
-            # p4.run("revert", "-k", paths)
-            addFiles = p4.run_add(paths)
-            editFiles = p4.run_edit(paths)
-========
             #p4Path = get_p4Path(paths)
             #p4.run("revert", "-k", paths)
             addFiles =  p4.run_add(paths)
             editFiles =  p4.run_edit(paths)
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
             lockFiles = p4.run_lock(paths)
             json_str = json.dumps(lockFiles)
             log_to_file("returnStrStart ", json_str, " returnStrEnd")
@@ -258,10 +184,6 @@ def p4_LockFiles(paths: list):
         errors = '\n'.join(e.errors)
         log_to_file("Error:", warnings, errors)
 
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-========
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
 def p4_UnLockFiles(paths: list):
     if not paths:
         log_to_file("Error:Lock 路径为空")
@@ -276,10 +198,6 @@ def p4_UnLockFiles(paths: list):
         errors = '\n'.join(e.errors)
         log_to_file("Error:", warnings, errors)
 
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-========
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
 def p4_FstatDir(path: str):
     if not path:
         log_to_file("Error:commit 路径为空")
@@ -287,13 +205,8 @@ def p4_FstatDir(path: str):
     try:
         with p4.connect():
             p4Path = get_p4Path(path)
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-            # p4.run("revert", "-k", paths)
-            files = p4.run_fstat('-T', 'otherLock4,otherLock3,otherLock2,otherLock1,otherLock,ourLock,clientFile', p4Path)
-========
             #p4.run("revert", "-k", paths)
             files =  p4.run_fstat('-T','otherLock4,otherLock3,otherLock2,otherLock1,otherLock,ourLock,clientFile',p4Path)
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
             json_str = json.dumps(files)
             log_to_file("returnStrStart ", json_str, " returnStrEnd")
     except P4Exception as e:
@@ -323,21 +236,13 @@ def p4_revert(path: str):
         errors = '\n'.join(e.errors)
         log_to_file("Error:", warnings, errors)
 
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-========
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
 def p4_revert_K_Files(paths: list):
     if not paths:
         log_to_file("Error:revert-K 路径为空")
     p4 = getP4Client()
     try:
         with p4.connect():
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-            revertFiles = p4.run_revert('-k', paths)
-========
             revertFiles = p4.run_revert('-k',paths)
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
             json_str = json.dumps(revertFiles)
             log_to_file("returnStrStart ", json_str, " returnStrEnd")
     except P4Exception as e:
@@ -345,10 +250,6 @@ def p4_revert_K_Files(paths: list):
         errors = '\n'.join(e.errors)
         log_to_file("Error:", warnings, errors)
 
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-========
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
 def p4_revertFiles(paths: list):
     if not paths:
         log_to_file("Error:revert 路径为空")
@@ -359,11 +260,7 @@ def p4_revertFiles(paths: list):
             # revertFiles = p4.run_revert(paths)
             cleanFiles = p4.run("clean", "-a", "-d", "-e", "-m", paths)
             json_str = json.dumps(cleanFiles)
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-            log_to_file("returnStrStart ", json_str, " returnStrEnd")
-========
             log_to_file("returnStrStart ", json_str, " returnStrEnd")      
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
             weite_to_log(f"执行revert成功：{json_str}")
     except P4Exception as e:
         warnings = '\n'.join(e.warnings)
@@ -398,16 +295,10 @@ def p4_commit(path: str, commmitMsg: str, force: bool = False):
             for changeStr in changelist:
                 if "Change" in changeStr and "created." in changeStr:
                     changeId = changeStr.split()[1]
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-            # reconcile file to changelist
-            reconcileFiles = p4.run_reconcile("-c", changeId, '-e', '-a', '-d', "-m", p4Path)
-========
                     
             # reconcile file to changelist
             reconcileFiles = p4.run_reconcile("-c", changeId,
                  '-e', '-a', '-d', "-m", p4Path)
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
             for msg in p4.messages:
                 log_to_file(msg)
             if not check_reconcileFiles_legal(reconcileFiles):
@@ -426,10 +317,6 @@ def p4_commit(path: str, commmitMsg: str, force: bool = False):
 
 p4_pre_user_reconcile_rets = ("trigger wolrdx_pre_reconcile", "enter password")
 
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-========
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
 def check_reconcileFiles_legal(reconcileFiles):
     if not reconcileFiles:
         return False
@@ -445,10 +332,6 @@ def check_reconcileFiles_legal(reconcileFiles):
 
         return count > 0
 
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-========
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
 def p4_commitpathlist(paths: list, commmitMsg: str, force: bool = False):
     p4 = getP4Client()
     reconcileFilesList = []
@@ -473,20 +356,12 @@ def p4_commitpathlist(paths: list, commmitMsg: str, force: bool = False):
                 # generate submit path
                 p4Path = get_p4Path(path)
                 p4.run("revert", "-k", p4Path)
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-                reconcileFiles = p4.run_reconcile("-c", changeId, '-e', '-a', '-d', "-m", p4Path)
-                if check_reconcileFiles_legal(reconcileFiles):
-                    reconcileFilesList += reconcileFiles
-            # do submit
-
-========
                 reconcileFiles = p4.run_reconcile(
                     "-c", changeId, '-e', '-a', '-d', "-m", p4Path)
                 if check_reconcileFiles_legal(reconcileFiles):
                     reconcileFilesList += reconcileFiles
             # do submit
            
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
             if not reconcileFilesList:
                 p4.run_change("-d", changeId)
                 log_to_file("no file need to commit!")
@@ -505,10 +380,6 @@ def p4_commitpathlist(paths: list, commmitMsg: str, force: bool = False):
         errors = '\n'.join(e.errors)
         log_to_file("Error:", warnings, errors)
 
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-========
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
 def p4_add_to_changelist(paths: list, changeId: str, msg: str):
     p4 = getP4Client()
     reconcileFilesList = []
@@ -523,11 +394,7 @@ def p4_add_to_changelist(paths: list, changeId: str, msg: str):
                 for changeStr in changelist:
                     if "Change" in changeStr and "created." in changeStr:
                         changeId = changeStr.split()[1]
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-========
             
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
             for path in paths:
                 if not path:
                     continue
@@ -536,14 +403,9 @@ def p4_add_to_changelist(paths: list, changeId: str, msg: str):
                 if changeId == "default":
                     reconcileFiles = p4.run_reconcile('-e', '-a', '-d', "-m", p4Path)
                 else:
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-                    reconcileFiles = p4.run_reconcile("-c", changeId, '-e', '-a', '-d', "-m", p4Path)
-
-========
                     reconcileFiles = p4.run_reconcile(
                         "-c", changeId, '-e', '-a', '-d', "-m", p4Path)
                     
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
                 if check_reconcileFiles_legal(reconcileFiles):
                     reconcileFilesList += reconcileFiles
 
@@ -553,21 +415,12 @@ def p4_add_to_changelist(paths: list, changeId: str, msg: str):
                 log_to_file("returnStrStart ", "NoChangeId", " returnStrEnd")
             else:
                 log_to_file("returnStrStart ", changeId, " returnStrEnd")
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-========
             
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
     except P4Exception as e:
         warnings = '\n'.join(e.warnings)
         errors = '\n'.join(e.errors)
         log_to_file("Error:", warnings, errors)
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-
-========
         
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
 def get_latest_all_info(path: str):
     if not path:
         log_to_file("Error:get_latest_all_info 路径为空")
@@ -578,12 +431,8 @@ def get_latest_all_info(path: str):
             changes = p4.run("changes", "-m", 1, p4Path)
             if len(changes) > 0:
                 changeInfo = changes[0]
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-            changeInfo['desc'] = p4.run_describe('-s', changeInfo['change'])[0]['desc']
-========
             changeInfo['desc'] = p4.run_describe(
                 '-s', changeInfo['change'])[0]['desc']
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
 
             json_str = json.dumps(changeInfo)
             log_to_file("returnStrStart ", json_str, " returnStrEnd")
@@ -593,10 +442,6 @@ def get_latest_all_info(path: str):
         errors = '\n'.join(e.errors)
         log_to_file("Error:", warnings, errors)
 
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-========
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
 def handle_reconcileFiles(reconcileFiles):
     newReconcileFiles = []
     for file in reconcileFiles:
@@ -604,10 +449,6 @@ def handle_reconcileFiles(reconcileFiles):
             newReconcileFiles.append(file)
     return newReconcileFiles
 
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-========
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
 def get_all_change_file(path: str):
     if not path:
         log_to_file("Error:get_all_change_file 路径为空")
@@ -631,10 +472,6 @@ def get_all_change_file(path: str):
         errors = '\n'.join(e.errors)
         log_to_file("Error:", warnings, errors)
 
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-========
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
 def get_all_change_file_byPathList(paths: list, commmitMsg: str, force: bool = False):
     if not paths:
         log_to_file("get_all_change_file_byPathList 路径为空")
@@ -642,18 +479,6 @@ def get_all_change_file_byPathList(paths: list, commmitMsg: str, force: bool = F
     try:
         with p4.connect():
             needReLockPaths = []
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-            haslockFiles = p4.run_fstat('-T', 'ourLock,clientFile', paths)
-            for i in range(len(haslockFiles)):
-                if haslockFiles[i].get('ourLock') != None:
-                    needReLockPaths.append(haslockFiles[i].get('clientFile'))
-
-            p4.run_revert('-k', paths)
-            reconcileFiles = p4.run_reconcile('-n', '-ead', paths)
-            json_str = json.dumps(reconcileFiles)
-            log_to_file("returnStrStart ", json_str, " returnStrEnd")
-            if len(needReLockPaths) > 0:
-========
             haslockFiles = p4.run_fstat('-T','ourLock,clientFile',paths)
             for i in range(len(haslockFiles)):
                 if haslockFiles[i].get('ourLock') != None :
@@ -664,7 +489,6 @@ def get_all_change_file_byPathList(paths: list, commmitMsg: str, force: bool = F
             json_str = json.dumps(reconcileFiles)
             log_to_file("returnStrStart ", json_str, " returnStrEnd")
             if len(needReLockPaths) >0:
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
                 p4.run_edit(needReLockPaths)
                 p4.run_lock(needReLockPaths)
 
@@ -696,10 +520,6 @@ def get_changes_info(path: str, maxCount=5):
         errors = '\n'.join(e.errors)
         log_to_file("Error:", warnings, errors)
 
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-========
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
 def p4_checkout_or_add(path: str):
     if not path:
         log_to_file("Error: 路径为空")
@@ -729,10 +549,6 @@ def p4_checkout_or_add(path: str):
         errors = '\n'.join(e.errors)
         log_to_file("Error:", warnings, errors)
 
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-========
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
 def p4_delete(path: str):
     if not path:
         log_to_file("Error: 路径为空")
@@ -755,12 +571,7 @@ def p4_delete(path: str):
         errors = '\n'.join(e.errors)
         log_to_file("Error:", warnings, errors)
 
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-def p4_print_file(path: str):
-========
 def p4_print_file(path:str):
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
     if not path:
         log_to_file("Error: 路径为空")
     p4 = getP4Client()
@@ -773,19 +584,11 @@ def p4_print_file(path:str):
         errors = '\n'.join(e.errors)
         log_to_file("Error:", warnings, errors)
 
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-========
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
 def p4_get_local_changelist(printresult: bool):
     p4 = getP4Client()
     try:
         with p4.connect():
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-            changeList = p4.run_changes("-s", "pending", "-u", args.p4user, "-c", args.p4workspace)
-========
             changeList = p4.run_changes("-s", "pending", "-u" , args.p4user, "-c", args.p4workspace)
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
             json_str = json.dumps(changeList)
             if printresult:
                 log_to_file("returnStrStart ", json_str, " returnStrEnd")
@@ -794,12 +597,7 @@ def p4_get_local_changelist(printresult: bool):
         warnings = '\n'.join(e.warnings)
         errors = '\n'.join(e.errors)
         log_to_file("Error:", warnings, errors)
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-
-========
         
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
 def weite_to_log(log):
     file_path = args.logFile
     content_to_add = log
@@ -822,11 +620,7 @@ def check_client_into():
         with p4.connect():
             p4.run_login()
             workspaces = p4.run_client("-o", args.p4workspace)
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-            workspaces[0]["Root"].replace("\\", "/").replace("//", "/")
-========
             workspaces[0]["Root"].replace("\\","/").replace("//","/")
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
             if not are_directories_same(workspaces[0]["Root"], args.p4Root):
                 log_to_file("Error:", f"当前目录 {args.p4Root} 和配置的workspace {args.p4workspace} 不匹配！这可能会导致P4相关操作异常，请到【Unity - Window - P4】中配置正确的workspace信息")
                 return False
@@ -837,23 +631,12 @@ def check_client_into():
         log_to_file("Error:", warnings, errors)
         return False
 
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-========
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
 def are_directories_same(dir1, dir2):
     canonical_dir1 = os.path.realpath(dir1)
     canonical_dir2 = os.path.realpath(dir2)
     return canonical_dir1.lower() == canonical_dir2.lower()
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-
-# 获取文件当前版本ID()
-def p4_file_current_version(paths: list, printresult: bool):
-========
 # 获取文件当前版本ID()
 def p4_file_current_version(paths: list,printresult: bool):
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
     if not paths or len(paths) <= 0:
         log_to_file("Error: 路径为空")
         return
@@ -878,14 +661,8 @@ def p4_file_current_version(paths: list,printresult: bool):
         errors = '\n'.join(e.errors)
         log_to_file("Error:", warnings, errors)
         weite_to_log(f"file_current_version失败：{warnings}, {errors}")
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-
-# 还原到上一个版本
-========
         
 #还原到上一个版本
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
 def p4_undo_reversion(paths: list):
     if not paths or len(paths) == 0:
         log_to_file("Error: 路径为空")
@@ -923,15 +700,8 @@ def p4_undo_reversion(paths: list):
         errors = '\n'.join(e.errors)
         log_to_file("Error:", warnings, errors)
         weite_to_log(f"执行reversion失败：{warnings}, {errors}")
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-
-# 还原文件到最新
-# 先revert然后getlast
-========
 #还原文件到最新
 #先revert然后getlast
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
 def p4_revert_and_getlastversion(paths: list):
     if not paths or len(paths) == 0:
         log_to_file("Error: 文件列表为空")
@@ -978,19 +748,11 @@ def p4_check_guid_modified(paths: list):
                 guid2 = None
                 for line in rets:
                     if isinstance(line, str):
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-                        if (line.startswith("< guid:")):
-                            guid1 = line.split(":")[1].strip()
-                        elif (line.startswith("> guid:")):
-                            guid2 = line.split(":")[1].strip()
-                            if (guid1 != guid2):
-========
                         if(line.startswith("< guid:")):
                             guid1 = line.split(":")[1].strip()
                         elif(line.startswith("> guid:")):
                             guid2 = line.split(":")[1].strip()
                             if(guid1 != guid2):
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
                                 msg = "meta GUID has been modified " + p4Path + "," + guid1 + "," + guid2
                                 errors = f"{errors}{msg}\n"
                             break
@@ -1009,11 +771,7 @@ def log_to_file(*_args):
     if not args.retLogFile:
         return
     message = "".join(map(str, _args))
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-    # print(message)
-========
     #print(message)
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
     with open(args.retLogFile, 'a', encoding='utf-8') as log_file:
         log_file.write(message + "\n")
 
@@ -1024,12 +782,8 @@ if __name__ == '__main__':
     parser.add_argument('--p4workspace', type=str, help='当前工作区')
     parser.add_argument('--dir', type=str, help='操作目标目录')
     parser.add_argument('--filePath', type=str, help='操作目标文件。文件内容是文件列表，用,分隔开')
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-    parser.add_argument('--cmd', type=str, help='操作行为。可传参数：update;commit;revert;get_latest_all_info')
-========
     parser.add_argument('--cmd', type=str,
                         help='操作行为。可传参数：update;commit;revert;get_latest_all_info')
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
     parser.add_argument('--msg', type=str, help='操作日志')
     parser.add_argument('--changeId', type=str, help='ChangeId')
     parser.add_argument('--logFile', type=str, help='LogFile')
@@ -1055,11 +809,7 @@ if __name__ == '__main__':
                 files = content.split(",")
                 # log_to_file(files)
                 p4_commitpathlist(files, args.msg)
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-========
             
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
             if os.path.isfile(args.filePath):
                 os.remove(args.filePath)
 
@@ -1071,11 +821,7 @@ if __name__ == '__main__':
 
         if args.cmd == 'update':
             p4_update(args.dir)
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-========
         
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
         if args.cmd == 'update_f':
             p4_update_f(args.filePath)
 
@@ -1084,11 +830,7 @@ if __name__ == '__main__':
                 content = file.read()
                 files = content.split(",")
                 p4_UpdateFiles(files)
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-========
             
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
             if os.path.isfile(args.filePath):
                 os.remove(args.filePath)
 
@@ -1106,21 +848,12 @@ if __name__ == '__main__':
                 content = file.read()
                 files = content.split(",")
                 p4_FstatFiles(files)
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-            if os.path.isfile(args.filePath):
-                os.remove(args.filePath)
-
-        if args.cmd == 'fstatDir':
-            p4_FstatDir(args.dir)
-========
             
             if os.path.isfile(args.filePath):
                 os.remove(args.filePath)
             
         if args.cmd == 'fstatDir':
             p4_FstatDir(args.dir)  
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
 
         if args.cmd == 'get_resolvefiles_info':
             with open(args.filePath, 'r', encoding='gbk') as file:
@@ -1129,22 +862,14 @@ if __name__ == '__main__':
                 Get_ResolveFiles_Info(files)
 
             if os.path.isfile(args.filePath):
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-                os.remove(args.filePath)
-========
                 os.remove(args.filePath)  
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
 
         if args.cmd == 'lockFiles':
             with open(args.filePath, 'r', encoding='gbk') as file:
                 content = file.read()
                 files = content.split(",")
                 p4_LockFiles(files)
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-========
             
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
             if os.path.isfile(args.filePath):
                 os.remove(args.filePath)
 
@@ -1153,61 +878,33 @@ if __name__ == '__main__':
                 content = file.read()
                 files = content.split(",")
                 p4_UnLockFiles(files)
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-            if os.path.isfile(args.filePath):
-                os.remove(args.filePath)
-========
             
             if os.path.isfile(args.filePath):
                 os.remove(args.filePath)  
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
 
         if args.cmd == 'revert_K_Files':
             with open(args.filePath, 'r', encoding='gbk') as file:
                 content = file.read()
                 files = content.split(",")
                 p4_revert_K_Files(files)
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-            if os.path.isfile(args.filePath):
-                os.remove(args.filePath)
-========
             
             if os.path.isfile(args.filePath):
                 os.remove(args.filePath) 
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
 
         if args.cmd == 'revertFiles':
             with open(args.filePath, 'r', encoding='gbk') as file:
                 content = file.read()
                 files = content.split(",")
                 p4_revertFiles(files)
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-            if os.path.isfile(args.filePath):
-                os.remove(args.filePath)
-
-========
             
             if os.path.isfile(args.filePath):
                 os.remove(args.filePath) 
         
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
         if args.cmd == 'get_all_change_file_by_pathList':
             with open(args.filePath, 'r', encoding='gbk') as file:
                 content = file.read()
                 files = content.split(",")
                 get_all_change_file_byPathList(files, args.msg)
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-            if os.path.isfile(args.filePath):
-                os.remove(args.filePath)
-
-        if args.cmd == 'checkout_or_add':
-            p4_checkout_or_add(args.filePath)
-
-========
             
             if os.path.isfile(args.filePath):
                 os.remove(args.filePath)
@@ -1215,23 +912,15 @@ if __name__ == '__main__':
         if args.cmd == 'checkout_or_add':
             p4_checkout_or_add(args.filePath)
         
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
         if args.cmd == 'mark_for_delete':
             p4_delete(args.filePath)
 
         if args.cmd == 'p4_print_file':
             p4_print_file(args.filePath)
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-        if args.cmd == "p4_get_local_changelist":
-            p4_get_local_changelist(True)
-
-========
             
         if args.cmd == "p4_get_local_changelist":
             p4_get_local_changelist(True)
             
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
         if args.cmd == "p4_add_to_changelist":
             with open(args.filePath, 'r', encoding='gbk') as file:
                 content = file.read()
@@ -1239,17 +928,10 @@ if __name__ == '__main__':
                 p4_add_to_changelist(files, args.changeId, args.msg)
             if os.path.isfile(args.filePath):
                 os.remove(args.filePath)
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-        if args.cmd == 'updateF':
-            p4_updateF(args.dir)
-
-========
                 
         if args.cmd == 'updateF':
             p4_updateF(args.dir)
         
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
         if args.cmd == "check_client_into":
             check_client_into()
         if args.cmd == "file_current_version":
@@ -1267,11 +949,7 @@ if __name__ == '__main__':
                 content = file.read()
                 files = content.split(",")
                 p4_revert_and_getlastversion(files)
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-
-========
                 
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py
         if args.cmd == "get_changes_info":
             get_changes_info(args.dir, int(args.max))
 
@@ -1282,7 +960,4 @@ if __name__ == '__main__':
         if args.cmd == "send_ddMsg":
             # LarkTools.send_ddMsg(args.larkChatId, args.msg)
             pass
-<<<<<<<< HEAD:Project/P4V/P4Tool.py
-========
 
->>>>>>>> e257e4c (Hierarchy):Project/P4Tool.py

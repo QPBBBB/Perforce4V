@@ -1,15 +1,5 @@
 import os
 import types
-<<<<<<<< HEAD:Project/SyncByPath/Merge001ToRelease.py
-import argparse
-import sys
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-from P4V import P4Tool
-from Utils.clear_folder import clear_folder
-from Utils.clear_asset import clear_asset
-from Utils.copy_folder import copy_folder
-from Utils.copy_asset import copy_asset
-========
 import P4Tool
 
 import argparse
@@ -19,7 +9,6 @@ from clear_folder import clear_folder
 from clear_asset import clear_asset
 from copy_folder import copy_folder
 from copy_asset import copy_asset
->>>>>>>> e257e4c (Hierarchy):Project/Merge001torelease.py
 
 # Workspace and depot paths
 RELEASE_ROOT = r"E:\worldx_robot_HZPCC0420018_2708"
@@ -31,29 +20,6 @@ VER001_WORKSPACE = r"worldx_robot_HZPCC0420018_1001"
 VER001_DEPOT = r"//world_x/ver_0.01"
 RELEASE_DEPOT = r"//world_x/release"
 
-<<<<<<<< HEAD:Project/SyncByPath/Merge001ToRelease.py
-
-def to_windows_path(path: str) -> str:
-    return path.replace("/", "\\")
-
-
-def get_release_path(user_path: str):
-    return os.path.join(RELEASE_ROOT, user_path)
-
-
-def get_ver001_path(user_path: str):
-    return os.path.join(VER001_ROOT, user_path)
-
-
-def get_release_depot_path(user_path: str):
-    return os.path.join(RELEASE_DEPOT, user_path)
-
-
-def get_ver001_depot_path(user_path: str):
-    return os.path.join(VER001_DEPOT, user_path)
-
-
-========
 def to_windows_path(path: str) -> str:
     return path.replace("/", "\\")
 
@@ -69,7 +35,6 @@ def get_release_depot_path(user_path: str):
 def get_ver001_depot_path(user_path: str):
     return os.path.join(VER001_DEPOT, user_path)
 
->>>>>>>> e257e4c (Hierarchy):Project/Merge001torelease.py
 def is_unity_folder(path: str) -> bool:
     path = os.path.normpath(path)
     name = os.path.basename(path)
@@ -77,20 +42,11 @@ def is_unity_folder(path: str) -> bool:
         return os.path.isdir(path)
     return "." not in name
 
-<<<<<<<< HEAD:Project/SyncByPath/Merge001ToRelease.py
-
-========
->>>>>>>> e257e4c (Hierarchy):Project/Merge001torelease.py
 def get_asset_directory(asset_path: str) -> str:
     asset_path = os.path.normpath(asset_path)
     return os.path.dirname(asset_path)
 
-<<<<<<<< HEAD:Project/SyncByPath/Merge001ToRelease.py
-
-def copy_001_to_release(target_path: str):
-========
 def copy001torls(target_path: str):
->>>>>>>> e257e4c (Hierarchy):Project/Merge001torelease.py
     ver001_path = get_ver001_path(target_path)
     release_path = get_release_path(target_path)
     if not is_unity_folder(release_path):
@@ -99,22 +55,6 @@ def copy001torls(target_path: str):
         clear_folder(release_path)
 
     if not is_unity_folder(ver001_path):
-<<<<<<<< HEAD:Project/SyncByPath/Merge001ToRelease.py
-        copy_asset(ver001_path, release_path)
-    else:
-        copy_folder(ver001_path, release_path)
-
-
-def copy_001_to_release_paths(paths_string: str):
-    # 拆分路径
-    path_list = [p.strip() for p in paths_string.split(",") if p.strip()]
-    for path in path_list:
-        copy_001_to_release(to_windows_path(path))
-        print(f"正在覆盖：{to_windows_path(path)}")
-
-
-def update_multiple_paths(path_string: str, p4user: str, p4workspace: str, log_file: str, rls: bool):
-========
         copy_asset(ver001_path,release_path)
     else:
         copy_folder(ver001_path, release_path)
@@ -128,7 +68,6 @@ def copy001torlspaths(paths_string: str):
 
 
 def update_multiple_paths(path_string: str, p4user: str, p4workspace: str, log_file: str, rls:bool):
->>>>>>>> e257e4c (Hierarchy):Project/Merge001torelease.py
     # 构造 args
     P4Tool.args = types.SimpleNamespace()
     P4Tool.args.p4user = p4user
@@ -147,17 +86,6 @@ def update_multiple_paths(path_string: str, p4user: str, p4workspace: str, log_f
         else:
             P4Tool.p4_update(get_ver001_path(path))
 
-<<<<<<<< HEAD:Project/SyncByPath/Merge001ToRelease.py
-
-def update_multiple_001_paths(path_string: str):
-    update_multiple_paths(path_string, p4user="worldx_robot", p4workspace=VER001_WORKSPACE, log_file="p4_update_log.txt", rls=False)
-
-
-def update_multiple_rls_paths(path_string: str):
-    update_multiple_paths(path_string, p4user="worldx_robot", p4workspace=RELEASE_WORKSPACE, log_file="p4_update_log.txt", rls=True)
-
-
-========
 def update_multiple_001_paths(path_string: str):
     update_multiple_paths(
         path_string,
@@ -175,7 +103,6 @@ def update_multiple_rls_paths(path_string: str):
         log_file="p4_update_log.txt",
         rls=True
     )
->>>>>>>> e257e4c (Hierarchy):Project/Merge001torelease.py
 def build_local_paths(path_string: str, root_prefix: str) -> list:
     # 清理 root_prefix 尾部的斜杠
     root_prefix = root_prefix.rstrip("\\/")
@@ -185,12 +112,7 @@ def build_local_paths(path_string: str, root_prefix: str) -> list:
     full_paths = [os.path.join(root_prefix, p) for p in path_list]
     return full_paths
 
-<<<<<<<< HEAD:Project/SyncByPath/Merge001ToRelease.py
-
-def submit_multiple_paths(path_string: str, p4user: str, p4workspace: str, log_file: str, rls: bool):
-========
 def submit_multiple_paths(path_string: str, p4user: str, p4workspace: str, log_file: str, rls:bool):
->>>>>>>> e257e4c (Hierarchy):Project/Merge001torelease.py
     # 构造 args
     P4Tool.args = types.SimpleNamespace()
     P4Tool.args.p4user = p4user
@@ -203,13 +125,6 @@ def submit_multiple_paths(path_string: str, p4user: str, p4workspace: str, log_f
         P4Tool.p4_commitpathlist(path_list, commmitMsg="p4-bypass p4-admin-bypass 001 To release ")
         print(f"以提交：{path_list}")
 
-<<<<<<<< HEAD:Project/SyncByPath/Merge001ToRelease.py
-
-def submit_release_paths(path_str: str):
-    submit_multiple_paths(path_str, p4user="worldx_robot", p4workspace=RELEASE_WORKSPACE, log_file="p4_update_log.txt", rls=True)
-
-
-========
 def submitreleasepaths(path_str: str):
     submit_multiple_paths(
         path_str,
@@ -218,7 +133,6 @@ def submitreleasepaths(path_str: str):
         log_file="p4_update_log.txt",
         rls=True
     )
->>>>>>>> e257e4c (Hierarchy):Project/Merge001torelease.py
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="同步 ver_0.01 到 release")
     parser.add_argument("--paths", help="用英文逗号分隔的多个相对路径（相对于工作区根目录）")
@@ -235,11 +149,6 @@ if __name__ == "__main__":
 
     update_multiple_001_paths(cleaned_path_string)
     update_multiple_rls_paths(cleaned_path_string)
-<<<<<<<< HEAD:Project/SyncByPath/Merge001ToRelease.py
-    copy_001_to_release_paths(cleaned_path_string)
-    submit_release_paths(cleaned_path_string)
-========
     copy001torlspaths(cleaned_path_string)
     submitreleasepaths(cleaned_path_string)
 
->>>>>>>> e257e4c (Hierarchy):Project/Merge001torelease.py
