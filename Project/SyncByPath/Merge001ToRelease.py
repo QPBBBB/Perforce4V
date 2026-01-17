@@ -2,11 +2,11 @@ import os
 import types
 import argparse
 import sys
-from Project.P4V import P4Tool
-from Project.Utils.clear_folder import clear_folder
-from Project.Utils.clear_asset import clear_asset
-from Project.Utils.copy_folder import copy_folder
-from Project.Utils.copy_asset import copy_asset
+from P4V import P4Tool
+from Utils.clear_folder import clear_folder
+from Utils.clear_asset import clear_asset
+from Utils.copy_folder import copy_folder
+from Utils.copy_asset import copy_asset
 
 # Workspace and depot paths
 RELEASE_ROOT = r"E:\worldx_robot_HZPCC0420018_2708"
