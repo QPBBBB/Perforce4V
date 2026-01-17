@@ -2,6 +2,7 @@ import os
 import types
 import argparse
 import sys
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from P4V import P4Tool
 from Utils.clear_folder import clear_folder
 from Utils.clear_asset import clear_asset
