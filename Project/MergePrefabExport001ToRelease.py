@@ -51,6 +51,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="同步 ver_0.01 到 release")
     parser.add_argument("--paths", help="用英文逗号分隔的多个相对路径（相对于工作区根目录）")
     args = parser.parse_args()
-
+    Merge001ToRelease.update_multiple_001_paths(to_absolute_unity_path(args.paths, ROOT001))
     export_str = extract_export_files(to_absolute_unity_path(args.paths, ROOT001))
     Merge001ToRelease.run_release_pipeline(export_str, "p4-bypass p4-admin-bypass 001 To release Export Prefab:" + os.path.splitext(os.path.basename(args.paths))[0])
