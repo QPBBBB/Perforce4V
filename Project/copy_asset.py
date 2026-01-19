@@ -16,7 +16,7 @@ def copy_asset(src_asset: str, dst_asset: str):
                 os.chmod(dst, 0o666)  # 解除只读
                 os.remove(dst)
             shutil.copy2(src, dst)
-            print(f"已复制: {src} -> {dst}")
+            # print(f"已复制: {src} -> {dst}")
         except Exception as e:
             print(f"复制失败: {src} -> {dst}，错误: {e}")
 

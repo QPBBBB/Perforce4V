@@ -7,6 +7,7 @@ def execute():
     # Read PathToReleaseFrom001.txt And Process Each Path
     file_path = r'D:\AssetMergeTool\PathToReleaseFrom001.txt'
     paths = read_paths_from_file(file_path)
+    print(paths)
 
 if __name__ == '__main__':
     execute()

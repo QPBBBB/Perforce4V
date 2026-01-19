@@ -21,13 +21,13 @@ def clear_folder(folder_path: str):
             if os.path.isfile(item_path) or os.path.islink(item_path):
                 os.chmod(item_path, stat.S_IWRITE)  # 解除只读
                 os.remove(item_path)
-                print(f"已删除文件: {item_path}")
+                # print(f"已删除文件: {item_path}")
             elif os.path.isdir(item_path):
                 def on_rm_error(func, path, exc_info):
                     os.chmod(path, stat.S_IWRITE)
                     func(path)
                 shutil.rmtree(item_path, onerror=on_rm_error)
-                print(f"已删除文件夹: {item_path}")
+                # print(f"已删除文件夹: {item_path}")
         except Exception as e:
             print(f"删除失败: {item_path}，错误: {e}")
 

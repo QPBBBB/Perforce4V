@@ -64,7 +64,7 @@ def copy001torlspaths(paths_string: str):
     path_list = [p.strip() for p in paths_string.split(",") if p.strip()]
     for path in path_list:
         copy001torls(to_windows_path(path))
-        print(f"正在覆盖：{to_windows_path(path)}")
+        # print(f"正在覆盖：{to_windows_path(path)}")
 
 
 def update_multiple_paths(path_string: str, p4user: str, p4workspace: str, log_file: str, rls:bool):
@@ -80,7 +80,7 @@ def update_multiple_paths(path_string: str, p4user: str, p4workspace: str, log_f
 
     # 遍历调用 p4_update
     for path in path_list:
-        print(f"正在更新：{path}")
+        # print(f"正在更新：{path}")
         if rls:
             P4Tool.p4_update(get_release_path(path))
         else:
@@ -112,7 +112,7 @@ def build_local_paths(path_string: str, root_prefix: str) -> list:
     full_paths = [os.path.join(root_prefix, p) for p in path_list]
     return full_paths
 
-def submit_multiple_paths(path_string: str, p4user: str, p4workspace: str, log_file: str, rls:bool):
+def submit_multiple_paths(path_string: str, p4user: str, p4workspace: str, log_file: str, rls:bool, dir: str = "p4-bypass p4-admin-bypass 001 To release "):
     # 构造 args
     P4Tool.args = types.SimpleNamespace()
     P4Tool.args.p4user = p4user
@@ -122,33 +122,42 @@ def submit_multiple_paths(path_string: str, p4user: str, p4workspace: str, log_f
     setattr(P4Tool, 'args', P4Tool.args)
     if rls:
         path_list = build_local_paths(path_string, root_prefix=RELEASE_ROOT)
-        P4Tool.p4_commitpathlist(path_list, commmitMsg="p4-bypass p4-admin-bypass 001 To release ")
+        P4Tool.p4_commitpathlist(path_list, commmitMsg=dir)
         print(f"以提交：{path_list}")
 
-def submitreleasepaths(path_str: str):
+def submitreleasepaths(path_str: str, indir: str = "p4-bypass p4-admin-bypass 001 To release "):
     submit_multiple_paths(
         path_str,
         p4user="worldx_robot",
         p4workspace=RELEASE_WORKSPACE,
         log_file="p4_update_log.txt",
-        rls=True
+        rls=True,
+        dir = indir
     )
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="同步 ver_0.01 到 release")
-    parser.add_argument("--paths", help="用英文逗号分隔的多个相对路径（相对于工作区根目录）")
-    args = parser.parse_args()
+
+def run_release_pipeline(paths_string, dir: str = "p4-bypass p4-admin-bypass 001 To release "):
     # 清理空格并拆分路径
-    raw_paths = [p.strip() for p in args.paths.split(",")]
+    raw_paths = [p.strip() for p in paths_string.split(",")]
     cleaned_paths = [p for p in raw_paths if p]
+
     # 加锁：路径为空或非法
     if not cleaned_paths:
         print("错误：路径列表为空或格式非法（可能包含连续逗号或空项）")
         sys.exit(1)
+
     # 重新拼接为合法字符串传入各函数
     cleaned_path_string = ",".join(cleaned_paths)
 
     update_multiple_001_paths(cleaned_path_string)
     update_multiple_rls_paths(cleaned_path_string)
     copy001torlspaths(cleaned_path_string)
-    submitreleasepaths(cleaned_path_string)
+    submitreleasepaths(cleaned_path_string,dir)
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="同步 ver_0.01 到 release")
+    parser.add_argument("--paths", help="用英文逗号分隔的多个相对路径（相对于工作区根目录）")
+    args = parser.parse_args()
+
+    run_release_pipeline(args.paths)
 

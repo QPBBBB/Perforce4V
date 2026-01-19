@@ -31,7 +31,7 @@ def copy_folder(src_folder: str, dst_folder: str):
                     os.chmod(dst_path, 0o666)
                     os.remove(dst_path)
                 shutil.copy2(src_path, dst_path)
-                print(f"已复制文件: {src_path} -> {dst_path}")
+                # print(f"已复制文件: {src_path} -> {dst_path}")
         except Exception as e:
             print(f"复制失败: {src_path} -> {dst_path}，错误: {e}")
 
