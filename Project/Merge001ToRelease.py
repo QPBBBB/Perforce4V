@@ -66,6 +66,14 @@ def copy001torlspaths(paths_string: str):
         copy001torls(to_windows_path(path))
         # print(f"正在覆盖：{to_windows_path(path)}")
 
+def get_parent_path(path: str) -> str:
+    """
+    返回给定路径的上一级路径，自动处理 / 和 \ 混用
+    """
+    # 统一为系统路径格式
+    normalized = path.replace("\\", "/").rstrip("/")
+    parent = os.path.dirname(normalized)
+    return parent
 
 def update_multiple_paths(path_string: str, p4user: str, p4workspace: str, log_file: str, rls:bool):
     # 构造 args
@@ -77,14 +85,20 @@ def update_multiple_paths(path_string: str, p4user: str, p4workspace: str, log_f
     setattr(P4Tool, 'args', P4Tool.args)
     # 拆分路径
     path_list = [p.strip() for p in path_string.split(",") if p.strip()]
+    #
+    #
+    # if rls:
+    #     P4Tool.p4_update(RELEASE_ROOT)
+    # else:
+    #     P4Tool.p4_update(VER001_ROOT)
 
     # 遍历调用 p4_update
     for path in path_list:
         # print(f"正在更新：{path}")
         if rls:
-            P4Tool.p4_update(get_release_path(path))
+            P4Tool.p4_update(get_parent_path(get_release_path(path)))
         else:
-            P4Tool.p4_update(get_ver001_path(path))
+            P4Tool.p4_update(get_parent_path(get_ver001_path(path)))
 
 def update_multiple_001_paths(path_string: str):
     update_multiple_paths(

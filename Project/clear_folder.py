@@ -8,7 +8,7 @@ def clear_folder(folder_path: str):
     删除指定文件夹内的所有内容，但保留文件夹本身，自动解除只读限制
     """
     if not os.path.exists(folder_path):
-        print(f"路径不存在: {folder_path}")
+        print(f"Release路径不存在: {folder_path}")
         return
 
     if not os.path.isdir(folder_path):
