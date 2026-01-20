@@ -103,7 +103,7 @@ def update_multiple_rls_paths(path_string: str):
         log_file="p4_update_log.txt",
         rls=True
     )
-def build_local_paths(path_string: str, root_prefix: str) -> list:
+def build_unlocal_paths(path_string: str, root_prefix: str) -> list:
     # 清理 root_prefix 尾部的斜杠
     root_prefix = root_prefix.rstrip("\\/")
     # 拆分路径并标准化为当前系统格式
@@ -111,6 +111,15 @@ def build_local_paths(path_string: str, root_prefix: str) -> list:
     # 拼接完整路径
     full_paths = [os.path.join(root_prefix, p) for p in path_list]
     return full_paths
+def build_local_paths(path_string: str, root_prefix: str) -> list:
+    # 清理 root_prefix 尾部的斜杠并统一为 /
+    root_prefix = root_prefix.rstrip("\\/").replace("\\", "/")
+    # 拆分路径并统一为 /
+    path_list = [p.strip().replace("\\", "/") for p in path_string.split(",") if p.strip()]
+    # 拼接完整路径并统一为 /
+    full_paths = [f"{root_prefix}/{p}" for p in path_list]
+    return full_paths
+
 
 def submit_multiple_paths(path_string: str, p4user: str, p4workspace: str, log_file: str, rls:bool, dir: str = "p4-bypass p4-admin-bypass 001 To release "):
     # 构造 args
@@ -121,7 +130,7 @@ def submit_multiple_paths(path_string: str, p4user: str, p4workspace: str, log_f
     P4Tool.args.retLogFile = log_file
     setattr(P4Tool, 'args', P4Tool.args)
     if rls:
-        path_list = build_local_paths(path_string, root_prefix=RELEASE_ROOT)
+        path_list = build_unlocal_paths(path_string, root_prefix=RELEASE_ROOT)
         P4Tool.p4_commitpathlist(path_list, commmitMsg=dir)
         print(f"以提交：{path_list}")
 
