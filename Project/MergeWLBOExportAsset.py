@@ -14,6 +14,8 @@ def generate_asset_paths(input_path: str) -> str:
         f"unity_project/Assets/Res/Level/LevelLayout/{map_name}",
         f"unity_project/AssetsExtra/raw/xrenderMobile/{map_name}",
         f"unity_project/AssetsExtra/raw/xrenderPc/{map_name}",
+        f"unity_project/AssetsExtra/raw/xrender/{map_name}",
+        f"unity_project/AssetsExtra/raw/XGIProbe/{map_name}",
         f"unity_project/Assets/Res_Export/Texture,unity_project/Assets/Res_Export/XRenderMeshData"
     ]
 
