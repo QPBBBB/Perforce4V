@@ -35,6 +35,18 @@ def get_release_depot_path(user_path: str):
 def get_ver001_depot_path(user_path: str):
     return os.path.join(VER001_DEPOT, user_path)
 
+def process_file(file_path):
+    try:
+        with open(file_path, 'r') as file:
+            # 读取文件内容，去除换行符并加上前缀
+            paths = [f"unity_project/{line.strip()}" for line in file if line.strip()]
+            # 用英文逗号连接每个路径
+            result = ', '.join(paths)
+            return result
+    except Exception as e:
+        print(f"Error reading file: {e}")
+        return None
+
 def is_unity_folder(path: str) -> bool:
     path = os.path.normpath(path)
     name = os.path.basename(path)
@@ -182,6 +194,15 @@ def run_release_pipeline(paths_string, dir: str = "001 To release "):
 
     # 重新拼接为合法字符串传入各函数
     cleaned_path_string = ",".join(cleaned_paths)
+
+    update_multiple_001_paths(cleaned_path_string)
+    update_multiple_rls_paths(cleaned_path_string)
+    copy001torlspaths(cleaned_path_string)
+    submitreleasepaths(cleaned_path_string,dir)
+
+def run_release_pipeline_list(txtpath_string, dir: str = "list 001 To release "):
+    # 重新拼接为合法字符串传入各函数
+    cleaned_path_string = process_file(txtpath_string)
 
     update_multiple_001_paths(cleaned_path_string)
     update_multiple_rls_paths(cleaned_path_string)
