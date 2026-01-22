@@ -28,4 +28,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
     mergepaths = generate_asset_paths(args.paths)
     print(mergepaths)
-    Merge001ToRelease.run_release_pipeline(mergepaths, "p4-bypass p4-admin-bypass 001 To release Export scene:" + os.path.splitext(os.path.basename(args.paths))[0])
+    Merge001ToRelease.run_release_pipeline(mergepaths, "001 To release Export scene:" + os.path.splitext(os.path.basename(args.paths))[0])

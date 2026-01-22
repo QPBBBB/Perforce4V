@@ -59,6 +59,17 @@ def copy001torls(target_path: str):
     else:
         copy_folder(ver001_path, release_path)
 
+
+def generate_meta_file_paths(input_list):
+    output_list = []
+    for file_path in input_list:
+        # 添加原始文件路径
+        output_list.append(file_path)
+        # 生成对应的 .meta 文件路径
+        meta_file_path = f"{file_path}.meta"
+        output_list.append(meta_file_path)
+    return output_list
+
 def copy001torlspaths(paths_string: str):
     # 拆分路径
     path_list = [p.strip() for p in paths_string.split(",") if p.strip()]
@@ -145,7 +156,8 @@ def submit_multiple_paths(path_string: str, p4user: str, p4workspace: str, log_f
     setattr(P4Tool, 'args', P4Tool.args)
     if rls:
         path_list = build_unlocal_paths(path_string, root_prefix=RELEASE_ROOT)
-        P4Tool.p4_commitpathlist(path_list, commmitMsg=dir)
+        sub_list = generate_meta_file_paths(path_list)
+        P4Tool.p4_commitpathlist(sub_list, commmitMsg=dir)
         print(f"以提交：{path_list}")
 
 def submitreleasepaths(path_str: str, indir: str = "p4-bypass p4-admin-bypass 001 To release "):
@@ -158,7 +170,7 @@ def submitreleasepaths(path_str: str, indir: str = "p4-bypass p4-admin-bypass 00
         dir = indir
     )
 
-def run_release_pipeline(paths_string, dir: str = "p4-bypass p4-admin-bypass 001 To release "):
+def run_release_pipeline(paths_string, dir: str = "001 To release "):
     # 清理空格并拆分路径
     raw_paths = [p.strip() for p in paths_string.split(",")]
     cleaned_paths = [p for p in raw_paths if p]

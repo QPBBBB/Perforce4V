@@ -26,8 +26,9 @@ def copy_asset(src_asset: str, dst_asset: str):
     # 复制 .meta 文件（如果存在）
     src_meta = src_asset + ".meta"
     dst_meta = dst_asset + ".meta"
-    if os.path.isfile(src_meta):
-        safe_copy_file(src_meta, dst_meta)
+    # if os.path.isfile(src_meta):
+    #     safe_copy_file(src_meta, dst_meta)
+    safe_copy_file(src_meta, dst_meta)
 
 
 if __name__ == "__main__":
